@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 require 'Qt4'
 $: << File.dirname(__FILE__) + "/ui"
-require 'ui/preferences'
+require 'preferences'
 
 class Tray < Qt::SystemTrayIcon
     
@@ -26,7 +26,7 @@ class Tray < Qt::SystemTrayIcon
             t.addAction(@quitAction)
         end
         self.contextMenu = @trayIconMenu
-        self.icon = Qt::Icon.new("#{File.dirname(__FILE__)}/airvideo-tray-off.png")
+        self.icon = Qt::Icon.new("#{File.dirname(__FILE__)}/icons/airvideo-tray-off.png")
         self.toolTip = 'AirVideo Server'
     end
 
@@ -49,13 +49,13 @@ class Tray < Qt::SystemTrayIcon
         if @serverThread
           Process.kill(9, @serverThread)
         end
-        self.icon = Qt::Icon.new("#{File.dirname(__FILE__)}/airvideo-tray-off.png")
+        self.icon = Qt::Icon.new("#{File.dirname(__FILE__)}/icons/airvideo-tray-off.png")
       else
         @startStopAction.text = 'Stop Server'
         @serverRunning = true
         cmd = 'java -jar /opt/airvideo-server/AirVideoServerLinux.jar $HOME/.config/airvideo-server/server.properties'
         @serverThread = fork { exec cmd }
-        self.icon = Qt::Icon.new("#{File.dirname(__FILE__)}/airvideo-tray.png")
+        self.icon = Qt::Icon.new("#{File.dirname(__FILE__)}/icons/airvideo-tray.png")
       end
     end
     
