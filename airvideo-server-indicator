@@ -1,0 +1,77 @@
+#!/usr/bin/env ruby
+require 'Qt4'
+$: << File.dirname(__FILE__) + "/ui"
+require 'ui/preferences'
+
+class Tray < Qt::SystemTrayIcon
+    
+    slots :startStopAction, :quit, :showPreferences
+
+    def initialize(parent = nil)
+        super(parent)
+        @serverThread = nil
+    
+        @serverRunning = false
+        @startStopAction = Qt::Action.new(tr("&Start Server"), self)
+        connect(@startStopAction, SIGNAL(:triggered), self, SLOT(:startStopAction))
+        @showPreferences = Qt::Action.new(tr("&Preferences"), self)
+        connect(@showPreferences, SIGNAL(:triggered), self, SLOT(:showPreferences))
+    
+        @quitAction = Qt::Action.new(tr("&Quit"), self)
+        connect(@quitAction, SIGNAL(:triggered), self, SLOT(:quit))
+        @trayIconMenu = Qt::Menu.new(nil) do |t|
+            t.addAction(@startStopAction)
+            t.addSeparator()
+            t.addAction(@showPreferences)
+            t.addAction(@quitAction)
+        end
+        self.contextMenu = @trayIconMenu
+        self.icon = Qt::Icon.new("#{File.dirname(__FILE__)}/airvideo-tray-off.png")
+        self.toolTip = 'AirVideo Server'
+    end
+
+    def quit
+      if @serverThread
+        Process.kill(9, @serverThread)
+      end
+      $qApp.quit
+    end
+
+    def showPreferences
+      @prefs ||= AirVideo::PreferencesDialog.new
+      @prefs.show
+    end
+
+    def startStopAction
+      if @serverRunning
+        @startStopAction.text = 'Start Server'
+        @serverRunning = false
+        if @serverThread
+          Process.kill(9, @serverThread)
+        end
+        self.icon = Qt::Icon.new("#{File.dirname(__FILE__)}/airvideo-tray-off.png")
+      else
+        @startStopAction.text = 'Stop Server'
+        @serverRunning = true
+        cmd = 'java -jar /opt/airvideo-server/AirVideoServerLinux.jar $HOME/.config/airvideo-server/server.properties'
+        @serverThread = fork { exec cmd }
+        self.icon = Qt::Icon.new("#{File.dirname(__FILE__)}/airvideo-tray.png")
+      end
+    end
+    
+    def createTrayIcon()
+    end
+end
+
+app = Qt::Application.new(ARGV)
+
+if !Qt::SystemTrayIcon.isSystemTrayAvailable
+    Qt::MessageBox.critical(nil, Qt::Object.tr("Systray"),
+                              Qt::Object.tr("I couldn't detect any system tray " \
+                                          "on this system."))
+    exit 1
+end
+
+tray = Tray.new
+tray.show
+app.exec
