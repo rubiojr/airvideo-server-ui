@@ -20,6 +20,8 @@ Open a Terminal and type:
     sudo apt-get update
     sudo apt-get install airvideo-server
 
+Universe and Multiverse components must be enabled to download dependencies.
+
 ## Notes
 
 AirVideo Server properties file is stored by default in ~/.config/airvideo-server. Settings are managed with the AirVideo Server panel indicator.
