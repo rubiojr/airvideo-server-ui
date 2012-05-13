@@ -28,6 +28,7 @@ class Tray < Qt::SystemTrayIcon
         self.contextMenu = @trayIconMenu
         self.icon = Qt::Icon.new("#{File.dirname(__FILE__)}/icons/airvideo-tray-off.png")
         self.toolTip = 'AirVideo Server'
+        AirVideo::Settings.instance.save unless File.exist?(AirVideo::Settings.instance.config_file)
     end
 
     def quit
@@ -49,8 +50,10 @@ class Tray < Qt::SystemTrayIcon
         if @serverThread
           Process.kill(9, @serverThread)
         end
+        `pkill -9 -f AirVideoServerLinux.jar`
         self.icon = Qt::Icon.new("#{File.dirname(__FILE__)}/icons/airvideo-tray-off.png")
       else
+        puts "Starting AirVideo Server"
         @startStopAction.text = 'Stop Server'
         @serverRunning = true
         cmd = 'java -jar /opt/airvideo-server/AirVideoServerLinux.jar $HOME/.config/airvideo-server/server.properties'
