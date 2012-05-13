@@ -1,10 +1,14 @@
 # Unofficial Inmethod Air Video Server for Linux
 
+![Screenshot](https://github.com/rubiojr/airvideo-server-ui/raw/master/screenshots/desktop.png)
+
 Get the official software for Windows and Mac from:
 
 http://inmethod.com
 
-While I make every effort to deliver a high quality product, we do not guarantee that our products are free from defects. This software is provided “as is," and you use the software at your own risk.
+## Disclaimer
+
+While I make every effort to deliver a high quality product, I do not guarantee that our products are free from defects. This software is provided “as is," and you use the software at your own risk.
 
 This software isn't supported by Inmethod. Any sofware fault is probably my own.
 
