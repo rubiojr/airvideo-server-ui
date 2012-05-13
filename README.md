@@ -8,7 +8,7 @@ http://inmethod.com
 
 ## Disclaimer
 
-While I make every effort to deliver a high quality product, I do not guarantee that our products are free from defects. This software is provided “as is," and you use the software at your own risk.
+While I make every effort to deliver a high quality product, I do not guarantee that airvideo-server-ui is free from defects. This software is provided “as is," and you use the software at your own risk.
 
 This software isn't supported by Inmethod. Any sofware fault is probably my own.
 
